@@ -1,6 +1,5 @@
-Insomnia (https://insomnia.rest/) is an open-source software for testing HTTP requests. The tests I ran on my API have been given below as curl commands:
-
-
+Insomnia (https://insomnia.rest/) is an open-source software for testing HTTP requests. 
+The tests I ran on my API have been given below as curl commands:
 
 TESTING CONTACT LISTING:
 
