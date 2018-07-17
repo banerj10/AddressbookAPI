@@ -1,0 +1,172 @@
+Insomnia (https://insomnia.rest/) is an open-source software for testing HTTP requests. The tests I ran on my API have been given below as curl commands:
+
+
+
+TESTING CONTACT LISTING:
+
+### pageSize not present ###
+curl --request GET \
+  --url 'http://127.0.0.1:5000/contact?page=1'
+
+Result
+Error: parameters not provided in request URL
+
+### First 3 entries ###
+curl --request GET \
+  --url 'http://127.0.0.1:5000/contact?query=%7B%7D&page=0&pageSize=3'
+
+Result:
+[
+	{
+		"address": "15 Princeton Street",
+		"name": "Anna",
+		"phone": "9852207700"
+	},
+	{
+		"address": "6 Tower Road",
+		"name": "Barry",
+		"phone": "2269004567"
+	},
+	{
+		"address": "Ashton House",
+		"name": "Cheryl",
+		"phone": "8287590001"
+	}
+]
+
+### Next 3 entries (currently only 4 total, so only 1 returned) ###
+curl --request GET \
+  --url 'http://127.0.0.1:5000/contact?query=%7B%7D&page=1&pageSize=3'
+
+Result:
+[
+	{
+		"address": "12 King Complex",
+		"name": "David",
+		"phone": "3340901243"
+	}
+]
+
+### Next 3 entries (completely out of bounds) ###
+curl --request GET \
+  --url 'http://127.0.0.1:5000/contact?query=%7B%7D&page=2&pageSize=3'
+
+Result:
+Error: pageSize/page exceeds length of data
+
+
+
+TESTING CONTACT RETRIEVAL
+
+### Valid contact ###
+curl --request GET \
+  --url http://127.0.0.1:5000/contact/Anna
+
+Result:
+{
+	"address": "15 Princeton Street",
+	"name": "Anna",
+	"phone": "9852207700"
+}
+
+### Invalid contact ###
+curl --request GET \
+  --url http://127.0.0.1:5000/contact/Ethan
+
+Result:
+Error: Contact not found
+
+
+
+TESTING CONTACT ADDITION
+
+### Adding contact with name and phone swapped ###
+curl --request POST \
+  --url http://127.0.0.1:5000/contact \
+  --header 'content-type: application/x-www-form-urlencoded' \
+  --data 'name=4065958768&address=5%20Baker%20Apt&phone=Ethan'
+
+Result:
+Error: invalid values in parameters
+
+### Adding valid contact ###
+curl --request POST \
+  --url http://127.0.0.1:5000/contact \
+  --header 'content-type: application/x-www-form-urlencoded' \
+  --data 'name=Ethan&address=5%20Baker%20Apt&phone=4065958768'
+
+Result:
+Contact successfully added
+
+### Trying to add same contact again ###
+curl --request POST \
+  --url http://127.0.0.1:5000/contact \
+  --header 'content-type: application/x-www-form-urlencoded' \
+  --data 'name=Ethan&address=5%20Baker%20Apt&phone=4065958768'
+
+Result:
+Error: contact already present
+
+### Ensuring contact can now be properly retrieved ###
+curl --request GET \
+  --url http://127.0.0.1:5000/contact/Ethan
+
+Result:
+{
+	"address": "5 Baker Apt",
+	"name": "Ethan",
+	"phone": "4065958768"
+}
+
+
+
+TESTING CONTACT UPDATE
+
+### Updating contact with invalid phone ###
+curl --request PUT \
+  --url http://127.0.0.1:5000/contact/Ethan \
+  --header 'content-type: application/x-www-form-urlencoded' \
+  --data 'address=5%20Baker%20Park&phone=Ethan'
+
+Result:
+Error: invalid values in parameters
+
+### Updating valid contact (Baker Park instead of Baker Apt) ###
+curl --request PUT \
+  --url http://127.0.0.1:5000/contact/Ethan \
+  --header 'content-type: application/x-www-form-urlencoded' \
+  --data 'address=5%20Baker%20Park&phone=4065958768'
+
+Result:
+Contact successfully updated
+
+### Ensuring contact shows new values when retrieved ###
+curl --request GET \
+  --url http://127.0.0.1:5000/contact/Ethan
+
+Result:
+{
+	"address": "5 Baker Park",
+	"name": "Ethan",
+	"phone": "4065958768"
+}
+
+
+
+TESTING CONTACT DELETION
+
+### Deleting valid contact ###
+curl --request DELETE \
+  --url http://127.0.0.1:5000/contact/David \
+  --header 'content-type: application/x-www-form-urlencoded'
+
+Result:
+contact successfully deleted
+
+### Trying to delete same contact again ###
+curl --request DELETE \
+  --url http://127.0.0.1:5000/contact/David \
+  --header 'content-type: application/x-www-form-urlencoded'
+
+Result:
+Error: Contact not found
