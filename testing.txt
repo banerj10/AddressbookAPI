@@ -7,7 +7,7 @@ TESTING CONTACT LISTING:
 curl --request GET \
   --url 'http://127.0.0.1:5000/contact?page=1'
 
-Result
+Result:
 Error: parameters not provided in request URL
 
 ### First 3 entries ###
