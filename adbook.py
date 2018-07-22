@@ -1,13 +1,10 @@
 from flask import Flask, request, jsonify
-from elasticsearch import Elasticsearch
 
 # creating flask instance
 app = Flask(__name__)
 
 # Hard-coded list which acts as dummy data for the contacts list.
-# In the full application, data would be sent to and retrieved from
-# an Elasticsearch data store. Here, the 'name' field is used as a
-# unique identifier for each data entry.
+# The 'name' field is used as a unique identifier for each data entry.
 contacts = [
     {'name': 'Anna', 'address': '15 Princeton Street', 'phone': '9852207700'}, 
     {'name': 'Barry', 'address': '6 Tower Road', 'phone': '2269004567'},
@@ -25,8 +22,7 @@ def homepage():
 # POST /contact requests. The GET request has all its parameters 
 # present in the URL and the POST request has parameters name,
 # address and contact present in the body in x-www-form-urlencoded
-# format. Unfortunately, for GET requests, query={} is unused due 
-# to Elasticsearch not being integrated.
+# format. query={} is unused as of this current implementation. 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact_all():
     # Subsection for GET requests.
