@@ -23,8 +23,8 @@ This serves GET requests. It provides a listing of the contact data. The user se
 entries are to be shown with pageSize, and chooses the offset using page (starting at 0). If the 
 pageSize/page selection is completely outside the list bounds, an error message is returned. 
 However, if it is only partially outsie the list bounds, all entries until the end of the list 
-are displayed without error. In the current implementation, it is assumed that both page and 
-pageSize are non-negative integers.
+are displayed without error. In the current implementation, query={} has not been used and it is 
+assumed that both page and pageSize are non-negative integers.
 
 http://127.0.0.1:5000/contact
 This serves POST requests. It requires three parameters in the request body: name, address and 
